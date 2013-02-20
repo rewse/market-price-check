@@ -1,0 +1,14 @@
+Get a price from stocks.finance.yahoo.co.jp
+
+ ***
+
+[USAGE] market-price-checker [-V] <CODE>
+
+OPTION:
+  -V, --version     Output version information and exit
+
+RETURN CODE:
+  0                 Success
+  1                 Error but you can fix yourself
+  2                 Critical Error
+ -1                 Unexpected Error. File a bug
