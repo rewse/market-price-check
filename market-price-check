@@ -130,6 +130,7 @@ def req_product(opener, code):
 
 def get_price(res):
   pat = re.compile(r'<td class="stoksPrice">(.+?)</td>')
+  price = "-----"
 
   for match in pat.finditer(res):
     price = match.group(1).replace(",", "")
