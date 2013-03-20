@@ -120,7 +120,7 @@ def req_product(opener, code):
   try:
     res = opener.open(BASE_URL + code)
   except urllib2.URLError:
-    print >>sys.stderr, "[ERROR] URL request error [URL=%s]" % res.geturl()
+    print >>sys.stderr, "[ERROR] URL request error [URL=%s]" % (BASE_URL + code)
     sys.exit(1)
 
   return res.read()
