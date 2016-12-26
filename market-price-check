@@ -5,7 +5,10 @@
 #
 # Get a price from stocks.finance.yahoo.co.jp
 #
-# Copyright (c) 2013 Tats Shibata
+#
+# MIT License
+#
+# Copyright (c) 2016 Tats Shibata
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -14,8 +17,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,10 +31,10 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail?code="
-USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36"
 
 #}}}
 # {{{ import
