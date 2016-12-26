@@ -2,7 +2,7 @@ Get a price from stocks.finance.yahoo.co.jp or www.msn.com.
 
  ***
 
-[USAGE] market-price-checker [-V] <CODE>
+[USAGE] market-price-check [-V] <CODE>
 
 OPTION:
   -V, --version     Output version information and exit

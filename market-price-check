@@ -49,7 +49,7 @@ import urllib2
 
 def usage():
   print >>sys.stderr, """
-[USAGE] market-price-checker [-V] <CODE>
+[USAGE] market-price-check [-V] <CODE>
 
 OPTION:
   -V, --version     Output version information and exit
