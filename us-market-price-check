@@ -136,7 +136,7 @@ def get_price(res, symbol):
   price = "-----"
 
   for match in pat.finditer(res):
-    price = match.group(1)
+    price = match.group(1).replace(",", "")
 
   return price
 
