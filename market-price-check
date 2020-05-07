@@ -134,12 +134,16 @@ def req_product(opener, code):
 def get_price(res):
   pat_stock = re.compile(r'<td class="stoksPrice">(.+?)</td>')
   pat_fund = re.compile(r'<p class="_1VJbpQWy"><span class="_3BGK5SVf">(.+?)</span>')
+  pat_index = re.compile(r'<p class="wlbmIy9W"><span class="_3BGK5SVf">(.+?)</span>')
   price = "-----"
 
   for match in pat_stock.finditer(res):
     price = match.group(1).replace(",", "")
 
   for match in pat_fund.finditer(res):
+    price = match.group(1).replace(",", "")
+
+  for match in pat_index.finditer(res):
     price = match.group(1).replace(",", "")
 
   return price
