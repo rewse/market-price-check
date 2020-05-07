@@ -42,6 +42,7 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36
 import getopt
 import re
 import sys
+import urllib
 import urllib2
 
 # }}}
@@ -121,9 +122,9 @@ def build_opener():
 
 def req_product(opener, code):
   try:
-    res = opener.open(BASE_URL + code)
+    res = opener.open(BASE_URL + urllib.pathname2url(code))
   except urllib2.URLError:
-    print >>sys.stderr, "[ERROR] URL request error [URL=%s]" % (BASE_URL + code)
+    print >>sys.stderr, "[ERROR] URL request error [URL=%s]" % (BASE_URL + urllib.pathname2url(code))
     sys.exit(1)
 
   return res.read()
