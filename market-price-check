@@ -1,14 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #coding: UTF-8
 ###############################################################################
 # @(#) Market Price Checker
 #
-# Get a price from stocks.finance.yahoo.co.jp
+# Get a price from https://finance.yahoo.co.jp/
 #
 #
 # MIT License
 #
-# Copyright (c) 2016 Tats Shibata
+# Copyright (c) 2020 Shibata, Tats
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,134 +31,123 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "1.0.1"
+__version__ = "2.0"
 
-BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail?code="
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36"
+BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail"
 
 #}}}
 # {{{ import
 
+from bs4 import BeautifulSoup
 import getopt
-import re
+import requests
 import sys
-import urllib
-import urllib2
 
 # }}}
 # {{{ usage()
 
 def usage():
-  print >>sys.stderr, """
+    print("""
 [USAGE] market-price-check [-V] <CODE>
 
 OPTION:
-  -V, --version     Output version information and exit
+    -V, --version         Output version information and exit
 
 RETURN CODE:
-  0                 Success
-  1                 Error but you can fix yourself
-  2                 Critical Error
- -1                 Unexpected Error. File a bug
-"""
+    0                     Success
+    1                     Error but you can fix yourself
+    2                     Critical Error
+   -1                     Unexpected Error. File a bug
+""", file=sys.stderr)
 
 # }}}
 # {{{ version()
 
 def version():
-  print """Market Price Checker %s
-""" % (__version__)
+    print("""Market Price Checker %s """ % (__version__))
 
 # }}}
 # {{{ Option
 
 class Option(object):
-  def __init__(self, opts, args):
-    self._set_opts(opts)
-    self._set_args(args)
+    def __init__(self, opts, args):
+        self._set_opts(opts)
+        self._set_args(args)
 
-  def _set_opts(self, opts):
-    for o, a in opts:
-      if o in ("-V", "--version"):
-        version()
-        sys.exit(1)
+    def _set_opts(self, opts):
+        for o, a in opts:
+            if o in ("-V", "--version"):
+                version()
+                sys.exit(1)
 
-  def _set_args(self, args):
-    try:
-      self.code = args[0]
-    except IndexError:
-      print >>sys.stderr, "[ERROR] CODE is required"
-      usage()
-      sys.exit(1)
+    def _set_args(self, args):
+        try:
+            self.code = args[0]
+        except IndexError:
+            print("[ERROR] CODE is required", file=sys.stderr)
+            usage()
+            sys.exit(1)
 
 # }}}
 # {{{ valid_opt()
 
 def valid_opt(argv):
-  try:
-    opts, args = getopt.gnu_getopt(
-      argv[1:],
-      "V",
-      ["version"]
-    )
-  except getopt.GetoptError:
-    print >>sys.stderr, "[ERROR] Unknown option"
-    usage()
-    sys.exit(1)
+    try:
+        opts, args = getopt.gnu_getopt(
+            argv[1:],
+            "V",
+            ["version"]
+        )
+    except getopt.GetoptError:
+        print("[ERROR] Unknown option", file=sys.stderr)
+        usage()
+        sys.exit(1)
 
-  return Option(opts, args)
-
-# }}}
-# {{{ build_opener()
-
-def build_opener():
-  opener = urllib2.build_opener()
-  opener.addheaders = [('User-Agent', USER_AGENT)]
-
-  return opener
-
-# }}}
-# {{{ req_product()
-
-def req_product(opener, code):
-  try:
-    res = opener.open(BASE_URL + urllib.pathname2url(code))
-  except urllib2.URLError:
-    print >>sys.stderr, "[ERROR] URL request error [URL=%s]" % (BASE_URL + urllib.pathname2url(code))
-    sys.exit(1)
-
-  return res.read()
+    return Option(opts, args)
 
 # }}}
 # {{{ get_price()
 
-def get_price(res):
-  pat_stock = re.compile(r'<td class="stoksPrice">(.+?)</td>')
-  pat_fund = re.compile(r'<p class="_1VJbpQWy"><span class="_3BGK5SVf">(.+?)</span>')
-  pat_index = re.compile(r'<p class="wlbmIy9W"><span class="_3BGK5SVf">(.+?)</span>')
-  price = "-----"
+def get_price(code):
+    try:
+        soup = BeautifulSoup(
+            requests.get(BASE_URL, params = {"code": code}).text,
+            "html.parser"
+        )
+    except requests.exceptions.RequestException:
+        print(
+            "[ERROR] URL request error [URL=%s]" %
+            (BASE_URL + urllib.request.pathname2url(code)), file=sys.stderr
+        )
+        sys.exit(1)
 
-  for match in pat_stock.finditer(res):
-    price = match.group(1).replace(",", "")
+    # Search a price from a page for stock
+    prices = soup.select(".stoksPrice")
+    
+    if len(prices) > 0:
+        return prices[-1].get_text().replace(",", "")
 
-  for match in pat_fund.finditer(res):
-    price = match.group(1).replace(",", "")
+    # Search a price from a page for fund
+    price = soup.select_one("._1VJbpQWy ._3BGK5SVf")
 
-  for match in pat_index.finditer(res):
-    price = match.group(1).replace(",", "")
+    if price is not None:
+        return price.get_text().replace(",", "")
 
-  return price
+    # Search a price from a page for index
+    price = soup.select_one(".wlbmIy9W ._3BGK5SVf")
+
+    if price is not None:
+        return price.get_text().replace(",", "")
+    
+    return "-----"
 
 # }}}
 # {{{ main()
 
 def main():
-  opt = valid_opt(sys.argv)
+    opt = valid_opt(sys.argv)
 
-  opener = build_opener()
-
-  res = req_product(opener, opt.code)
-  print get_price(res)
+    print(get_price(opt.code))
 
 if __name__ == "__main__":
-  main()
+    main()
