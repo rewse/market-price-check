@@ -2,13 +2,16 @@ Get a price from stocks.finance.yahoo.co.jp or www.msn.com.
 
  ***
 
-[USAGE] market-price-check [-V] <CODE>
+[USAGE] market-price-check [-p provider ] [-V] <CODE>
 
 OPTION:
-  -V, --version     Output version information and exit
+    -p, --provider        Choose a price provider. You can choose "yahoo" or
+                          "msn". (Default: yahoo)
+    -V, --version         Output version information and exit
 
 RETURN CODE:
-  0                 Success
-  1                 Error but you can fix yourself
-  2                 Critical Error
- -1                 Unexpected Error. File a bug
+    0                     Success
+    1                     Error but you can fix yourself
+    2                     Critical Error
+   -1                     Unexpected Error. File a bug
+

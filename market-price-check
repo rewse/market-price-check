@@ -3,7 +3,7 @@
 ###############################################################################
 # @(#) Market Price Checker
 #
-# Get a price from https://finance.yahoo.co.jp/
+# Get a price from stocks.finance.yahoo.co.jp or www.msn.com.
 #
 #
 # MIT License
