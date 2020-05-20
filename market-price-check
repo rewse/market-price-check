@@ -157,8 +157,6 @@ def get_price(code, provider):
             "html.parser"
         )
 
-        print(soup)
-
         tag = soup.select_one(".current-price")
 
         if tag is not None:
