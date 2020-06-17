@@ -30,7 +30,7 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "3.0"
+__version__ = "3.1"
 
 YAHOO_BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail"
 MSN_BASE_URL = "http://www.msn.com/ja-jp/money/stockdetails/"
@@ -95,12 +95,10 @@ class Option(object):
                 sys.exit(1)
 
     def _set_args(self, args):
-        try:
+        if len(args) > 0:
             self.code = args[0]
-        except IndexError:
-            print("[ERROR] CODE is required", file=sys.stderr)
-            usage()
-            sys.exit(1)
+        else:
+            self.code = input("Code: ")
 
 # }}}
 # {{{ valid_opt()
