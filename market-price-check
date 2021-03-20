@@ -2,7 +2,7 @@
 ###############################################################################
 # @(#) Market Price Checker
 #
-# Get a price from stocks.finance.yahoo.co.jp or www.msn.com.
+# Get a price from stocks.finance.yahoo.co.jp or www.bloomberg.co.jp
 #
 #
 # MIT License
@@ -30,12 +30,12 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "3.1"
+__version__ = "4.0"
 
 YAHOO_BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail"
-MSN_BASE_URL = "http://www.msn.com/ja-jp/money/stockdetails/"
+BLOOMBERG_BASE_URL = "https://www.bloomberg.co.jp/quote/"
 
-USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
 
 #}}}
 # {{{ import
@@ -54,7 +54,7 @@ def usage():
 
 OPTION:
     -p, --provider        Choose a price provider. You can choose "yahoo" or
-                          "msn". (Default: yahoo)
+                          "bloomberg". (Default: yahoo)
     -V, --version         Output version information and exit
 
 RETURN CODE:
@@ -83,7 +83,7 @@ class Option(object):
     def _set_opts(self, opts):
         for o, a in opts:
             if o in ("-p", "--provider"):
-                if a in ("yahoo", "msn"):
+                if a in ("yahoo", "bloomberg"):
                     self.provider = a
                 else:
                     print("[ERROR] Invalid PROVIDER", file=sys.stderr)
@@ -144,17 +144,16 @@ def get_price(code, provider):
 
         if tag is not None:
             return tag.get_text().replace(",", "")
-    elif provider == "msn":
+    elif provider == "bloomberg":
         soup = BeautifulSoup(
             requests.get(
-                MSN_BASE_URL,
-                params = {"symbol": code},
+                BLOOMBERG_BASE_URL + code + ":US",
                 headers = {"User-Agent": USER_AGENT}
             ).text,
             "html.parser"
         )
 
-        tag = soup.select_one(".current-price")
+        tag = soup.select_one(".price")
 
         if tag is not None:
             price = tag.get_text()
