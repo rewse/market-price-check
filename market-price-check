@@ -136,11 +136,13 @@ def get_price(code, provider):
         # Search a price from a page for fund
         tag = soup.select_one("._1VJbpQWy ._3BGK5SVf")
 
-        if tag is not None:
-            return tag.get_text().replace(",", "")
+        # Search a price from a page for domestic index
+        if tag is None:
+            tag = soup.select_one("._1lCKo25n ._3bYcwOHa")
 
-        # Search a price from a page for index
-        tag = soup.select_one("._1lCKo25n ._3bYcwOHa")
+        # Search a price from a page for international index
+        if tag is None:
+            tag = soup.select_one(".wlbmIy9W ._3BGK5SVf")
 
         if tag is not None:
             return tag.get_text().replace(",", "")
