@@ -30,7 +30,7 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "4.1"
+__version__ = "4.1.1"
 
 YAHOO_BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail"
 BLOOMBERG_BASE_URL = "https://www.bloomberg.co.jp/quote/"
@@ -143,6 +143,10 @@ def get_price(code, provider):
         # Search a price from a page for international index
         if tag is None:
             tag = soup.select_one(".wlbmIy9W ._3BGK5SVf")
+
+        # Search a price from a page for foreign exchange
+        if tag is None:
+            tag = soup.select_one("._1c9rs8VH ._3BGK5SVf")
 
         if tag is not None:
             return tag.get_text().replace(",", "")
