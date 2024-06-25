@@ -30,9 +30,9 @@
 ###############################################################################
 # {{{ const
 
-__version__ = "4.1.1"
+__version__ = "4.2"
 
-YAHOO_BASE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail"
+YAHOO_BASE_URL = "https://finance.yahoo.co.jp/quote/"
 BLOOMBERG_BASE_URL = "https://www.bloomberg.co.jp/quote/"
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
@@ -41,6 +41,7 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 
 # {{{ import
 
 from bs4 import BeautifulSoup
+from urllib.parse import quote
 import getopt
 import requests
 import sys
@@ -123,7 +124,7 @@ def valid_opt(argv):
 def get_price(code, provider):
     if provider == "yahoo":
         soup = BeautifulSoup(
-            requests.get(YAHOO_BASE_URL, params = {"code": code}).text,
+            requests.get(YAHOO_BASE_URL + quote(code)).text,
             "html.parser"
         )
 
@@ -142,7 +143,7 @@ def get_price(code, provider):
 
         # Search a price from a page for international index
         if tag is None:
-            tag = soup.select_one(".wlbmIy9W ._3BGK5SVf")
+            tag = soup.select_one("#mainIndexPriceBoard > section > div._PriceBoardMain_1wkkf_1 > header > div._PriceBoardMain__headerPrice_1wkkf_18 > div:nth-child(1) > span > span > span")
 
         # Search a price from a page for foreign exchange
         if tag is None:
