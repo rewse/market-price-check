@@ -147,7 +147,7 @@ def get_price(code, provider):
 
         # Search a price from a page for foreign exchange
         if tag is None:
-            tag = soup.select_one("._1c9rs8VH ._3BGK5SVf")
+            tag = soup.select_one("#contents > div > div.board__1-Hj > div.contents__103w > div.nameAndPrice__2AQd > p.price__1c9r > span")
 
         if tag is not None:
             return tag.get_text().replace(",", "")
