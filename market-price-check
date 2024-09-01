@@ -139,7 +139,7 @@ def get_price(code, provider):
 
         # Search a price from a page for domestic index
         if tag is None:
-            tag = soup.select_one("._2oKWwdVy ._3wVTceYe")
+            tag = soup.select_one("#root > main > div > div.board__30eL > div.contents__2Ods > div.values__1Grf > p.price__2oKW > span")
 
         # Search a price from a page for international index
         if tag is None:
