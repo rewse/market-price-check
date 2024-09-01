@@ -135,7 +135,7 @@ def get_price(code, provider):
             return tags[-1].get_text().replace(",", "")
 
         # Search a price from a page for fund
-        tag = soup.select_one("._1VJbpQWy ._3BGK5SVf")
+        tag = soup.select_one("#contents > div > div.board__3EEP > div.contents__2pj4 > div.values__2EDc > p.price__1VJb > span")
 
         # Search a price from a page for domestic index
         if tag is None:
