@@ -129,7 +129,7 @@ def get_price(code, provider):
         )
 
         # Search a price from a page for stock
-        tags = soup.select(".stoksPrice")
+        tags = soup.select("#root > main > div > section > div.PriceBoardMain__1nb3 > header > div.PriceBoardMain__headerPrice__gbs7 > span > span > span")
         
         if len(tags) > 0:
             return tags[-1].get_text().replace(",", "")
